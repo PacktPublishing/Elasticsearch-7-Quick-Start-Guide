@@ -1,0 +1,530 @@
+POST facebook/_doc?routing=cactus_flower
+{
+  "user": "cactus_flower",
+  "postDate": "2017-05-19T13:10:02",
+  "message": "Just looking for the user Cactus Flower"
+}
+
+
+POST /facebook/_doc?routing=cactus_flower
+{
+  "query": {
+    "bool": {
+      "must": {
+        "query_string": {
+          "query": "Posts created by cactus_flower"
+        }
+      },
+      "filter": {
+        "term": {
+          "user": "cactus_flower"
+        }
+      }
+    }
+  }
+}
+
+
+PUT /_cluster/settings
+{
+  "transient": {
+    "cluster.routing.use_adaptive_replica_selection": true
+  }
+}
+
+
+GET facebook/_search?q=user:cactus_flower
+
+
+GET facebook/_search?q=tag:wow
+
+
+GET _all/_search?q=tag:wow
+
+
+GET facebook/_search?q=user:cactus_flower
+
+
+GET /facebook/_search
+{
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "from": 0,
+  "size": 10,
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+PUT /my_index
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "post_date": {
+          "type": "date"
+        },
+        "user": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword"
+        },
+        "age": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
+
+
+GET /my_index/_search
+{
+  "sort": [
+    {
+      "post_date": {
+        "order": "asc"
+      }
+    },
+    "user",
+    {
+      "name": "desc"
+    },
+    {
+      "age": "desc"
+    },
+    "_score"
+  ],
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+PUT /my_index/_doc/1?refresh
+{
+  "product": "candy",
+  "price": [
+    15,
+    3
+  ]
+}
+
+
+POST /my_index/_search
+{
+  "query": {
+    "term": {
+      "product": "candy"
+    }
+  },
+  "sort": [
+    {
+      "price": {
+        "order": "asc",
+        "mode": "avg"
+      }
+    }
+  ]
+}
+
+
+GET /_search
+{
+  "_source": false,
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "_source": "obj.*",
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "_source": {
+    "includes": [
+      "obj1.*",
+      "obj2.*"
+    ],
+    "excludes": [
+      "*.description"
+    ]
+  },
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "script_fields": {
+    "test1": {
+      "script": "params['_source']['message']"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "docvalue_fields": [
+    {
+      "field": "*_date_field",
+      "format": "epoch_millis"
+    }
+  ]
+}
+
+
+PUT /chocolates
+{
+  "mappings": {
+    "properties": {
+      "brand": {
+        "type": "keyword"
+      },
+      "flavours": {
+        "type": "keyword"
+      },
+      "taste": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+
+PUT /chocolates/_doc/1?refresh
+{
+  "brand": "milka",
+  "flavours": "dark chocolate",
+  "taste": "salty"
+}
+
+
+GET /chocolates/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            " flavours ": "red"
+          }
+        },
+        {
+          "term": {
+            "brand": "milka"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "tastes": {
+      "terms": {
+        "field": "salty"
+      }
+    }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "match": {
+      "content": "cactus_flower"
+    }
+  },
+  "highlight": {
+    "fields": {
+      "content": {}
+    }
+  }
+}
+
+
+POST /_search
+{
+  "query": {
+    "match": {
+      "message": {
+        "operator": "or",
+        "query": "the quick brown"
+      }
+    }
+  },
+  "rescore": {
+    "window_size": 50,
+    "query": {
+      "rescore_query": {
+        "match_phrase": {
+          "message": {
+            "query": "the quick brown",
+            "slop": 2
+          }
+        }
+      },
+      "query_weight": 0.7,
+      "rescore_query_weight": 1.2
+    }
+  }
+}
+
+
+GET /_search
+{
+  "explain": true,
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "version": true,
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "min_score": 0.5,
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+GET /_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "name.first": {
+              "query": "John",
+              "_name": "first"
+            }
+          }
+        },
+        {
+          "match": {
+            "name.last": {
+              "query": "Smith",
+              "_name": "last"
+            }
+          }
+        }
+      ],
+      "filter": {
+        "terms": {
+          "name.last": [
+            "Smith",
+            "cactus_flower"
+          ],
+          "_name": "test"
+        }
+      }
+    }
+  }
+}
+
+
+GET /twitter/_search
+{
+  "query": {
+    "match": {
+      "message": "elasticsearch"
+    }
+  },
+  "collapse": {
+    "field": "user"
+  },
+  "sort": [
+    "likes"
+  ],
+  "from": 10
+}
+
+
+GET _search/template
+{
+  "source": {
+    "query": {
+      "match": {
+        "{{my_field}}": "{{my_value}}"
+      }
+    },
+    "size": "{{my_size}}"
+  },
+  "params": {
+    "my_field": "message",
+    "my_value": "some message",
+    "my_size": 5
+  }
+}
+
+
+GET /twitter/_search_shards
+
+
+GET /twitter/_search_shards?routing=foo,bar
+
+
+GET /facebook/_count
+{
+  "query": {
+    "term": {
+      "user": "cactus_flower"
+    }
+  }
+}
+
+
+PUT twitter/_bulk?refresh
+{
+  "index": {
+    "_id": 1
+  }
+}
+{
+  "user": "cactus_flower",
+  "post_date": "2009-11-15T14:12:12",
+  "message": "trying out Elasticsearch"
+}
+{
+  "index": {
+    "_id": 2
+  }
+}
+{
+  "user": "cactus_pot",
+  "post_date": "2009-11-15T14:12:13",
+  "message": "My username is similar to @cactus_flower!"
+}
+
+
+GET twitter/_validate/query?q=user:foo
+
+
+GET /twitter/_explain/0
+{
+  "query": {
+    "match": {
+      "message": "elasticsearch"
+    }
+  }
+}
+
+
+GET /twitter/_search
+{
+  "profile": true,
+  "query": {
+    "match": {
+      "message": "some number"
+    }
+  }
+}
+
+
+GET _field_caps?fields=rating
+
+
+GET twitter/_field_caps?fields=rating
+
+
+GET _field_caps?fields=rating,title
+{
+  "fields": {
+    "rating": {
+      "long": {  		//defined as long for index 1 and 2
+        "searchable": true,
+        "aggregatable": false,
+        "indices": [
+          "index1",
+          "index2"
+        ],
+        "non_aggregatable_indices": [
+          "index1"
+        ]
+      },
+      "keyword": {  		//defined as keyword for index 3 and 4
+        "searchable": false,
+        "aggregatable": true,
+        "indices": [
+          "index3",
+          "index4"
+        ],
+        "non_searchable_indices": [
+          "index4"
+        ]
+      }
+    },
+    "title": {
+      "text": {
+        "searchable": true,
+        "aggregatable": false
+      }
+    }
+  }
+}
+
+*********************************************************************************************************************

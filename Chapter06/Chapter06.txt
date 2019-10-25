@@ -1,0 +1,216 @@
+PUT index
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "english_exact": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "body": {
+        "type": "text",
+        "analyzer": "english",
+        "fields": {
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+PUT index/_doc/1
+{
+  "body": "The pay should be done through a local bank deposit."
+}
+
+
+PUT index/_doc/2
+{
+  "body": "The payment has been received."
+}
+
+
+POST index/_refresh
+
+
+GET index/_search
+{
+  "query": {
+    "simple_query_string": {
+      "fields": [
+        "body"
+      ],
+      "query": "pay"
+    }
+  }
+}
+
+
+GET index/_search
+{
+  "query": {
+    "simple_query_string": {
+      "fields": [
+        "body.exact"
+      ],
+      "query": "pay"
+    }
+  }
+}
+
+
+PUT books
+{
+  "mappings": {
+    "properties": {
+      "name_and_title": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text",
+        "copy_to": "name_and_title"
+      },
+      "title": {
+        "type": "text",
+        "copy_to": "name_and_title"
+      }
+    }
+  }
+}
+
+
+PUT index/_doc/1
+{
+  "designation": "Sports shoes",
+  "size": 8
+}
+
+
+GET index/_search
+{
+  "aggs": {
+    "size_ranges": {
+      "range": {
+        "field": "size",
+        "ranges": [
+          {
+            "to": 6
+          },
+          {
+            "from": 6,
+            "to": 12
+          },
+          {
+            "from": 12
+          }
+        ]
+      }
+    }
+  }
+}
+
+
+PUT index
+{
+  "mappings": {
+    "properties": {
+      "size_range": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+
+PUT index/_doc/1
+{
+  "designation": "Sports shoes",
+  "size": 8,
+  "size_range": "6-12"
+}
+
+
+GET index/_search
+{
+  "aggs": {
+    "size_ranges": {
+      "terms": {
+        "field": "size_range"
+      }
+    }
+  }
+}
+
+
+PUT index_name
+{
+  "mappings": {
+    "properties": {
+      "field": {
+        "type": "keyword",
+        "eager_global_ordinals": true
+      }
+    }
+  }
+}
+
+
+PUT index
+{
+  "mappings": {
+    "properties": {
+      "foo": {
+        "type": "integer",
+        "index": false
+      }
+    }
+  }
+}
+
+
+PUT index
+{
+  "mappings": {
+    "properties": {
+      "foo": {
+        "type": "text",
+        "norms": false
+      }
+    }
+  }
+}
+
+
+PUT index_name
+{
+  "mappings": {
+    "_source": {
+      "enabled": false
+    }
+  }
+}
+
+
+PUT index/_settings
+{
+  "index": {
+    "blocks.read_only": true
+  }
+}
+
+
+POST /test/_forcemerge
+
+
+POST source_index/_shrink/target_index

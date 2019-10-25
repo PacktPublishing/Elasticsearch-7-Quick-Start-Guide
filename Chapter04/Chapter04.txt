@@ -1,0 +1,568 @@
+PUT my_index
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "standard"
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "whitespace",
+  "text": "It’s not rocket science."
+}
+
+//
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "my_sentence": {
+        "type": "text",
+        "analyzer": "custom_analyzer"
+      }
+    }
+  }
+}
+
+
+
+GET my_index_name/_analyze
+{
+  "analyzer": "custom_analyzer",
+  "text": "Is this déjà vu?"
+}
+
+
+GET my_index_name/_analyze
+{
+  "field": "my_sentence",
+  "text": "Is this déjà vu?"
+}
+
+
+POST _analyze
+{
+  "analyzer": "standard",
+  "text": "This is my first program and these are my first 5 lines"
+}
+
+
+PUT my_index
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_personalized_analyzer": {
+          "type": "standard",
+          "max_token_length": 5,
+          "stopwords": "_english_"
+        }
+      }
+    }
+  }
+}
+
+
+
+POST my_index/_analyze
+{
+  "analyzer": "my_personalized_analyzer",
+  "text": "This is my first program and these are my first 5 lines"
+}
+
+
+PUT standard_example
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "rebuilt_standard": {
+          "tokenizer": "standard",
+          "filter": [
+            "remove_duplicates" 		//add any token filter here  
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+PUT simple_example
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "rebuilt_simple": {
+          "tokenizer": "lowercase",
+          "filter": [add any filter here]
+        }
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "whitespace",
+  "text": "This is my first program and these are my first 5 lines."
+}
+
+
+PUT whitespace_example
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "rebuilt_simple": {
+          "tokenizer": "whitespace",
+          "filter": [add any token filter here]
+        }
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "stop",
+  "text": "This is my first program and these are my first 5 lines."
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "the_stop_analyzer": {
+          "type": "stop",
+          "stopwords": [
+            "first",
+            "and",
+            "_english_"
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "the_stop_analyzer",
+  "text": "This is my first program and these are my first lines."
+}
+
+
+PUT stop_example
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"		//this can be overwritten with stopwords or stopwords_path parameters
+        }
+      },
+      "analyzer": {
+        "rebuilt_stop": {
+          "tokenizer": "lowercase",
+          "filter": [
+            "english_stop"
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "keyword",
+  "text": "This is my first program and these are my first lines."
+}
+
+
+PUT keyword_example
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "rebuilt_keyword": {
+          "tokenizer": "keyword",
+          "filter": [add any filter here]
+        }
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "pattern",
+  "text": "This is my first program and these are my first line."
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "email_analyzer": {
+          "type": "pattern",
+          "pattern": "\\W|_",
+          "Lowercase": true
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "email_analyzer",
+  "text": "Jane_Smith@foo-bar.com"
+}
+
+
+PUT pattern_example
+{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "split_on_non_word": {
+          "type": "pattern",
+          "pattern": "\\W+"
+        }
+      },
+      "analyzer": {
+        "rebuilt_pattern": {
+          "tokenizer": "split_on_non_word",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "analyzer": "fingerprint",
+  "text": "Get busy living or get busy dying."
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "fingerprint_analyzer": {
+          "type": "fingerprint",
+          "stopwords": "_english_"
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "fingerprint_analyzer",
+  "text": "Get busy living or get busy dying."
+}
+
+
+PUT index
+{
+  "settings": {
+    "analysis": {
+      "char_filter": {
+        "quote": {
+          "type": "mapping",
+          "mappings": [
+            "« => \"",
+            "» => \""
+          ]
+        }
+      },
+      "normalizer": {
+        "my_normalizer_name": {
+          "type": "custom",
+          "char_filter": [
+            "quote"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "foo": {
+        "type": "keyword",
+        "normalizer": "my_normalizer_name"
+      }
+    }
+  }
+}
+
+
+POST _analyze
+{
+  "tokenizer": "standard",
+  "text": "Those who dare to fail miserably can achieve greatly."
+}
+
+
+POST _analyze
+{
+  "tokenizer": "letter",
+  "text": "You’re a wizard, Harry."
+}
+
+
+POST _analyze
+{
+"tokenizer": "lowercase",
+"text": "You’re a wizard, Harry."
+}
+
+
+POST _analyze
+{
+  "tokenizer": "lowercase",
+  "text": "You’re a wizard, Harry."
+}
+
+
+POST _analyze
+{
+  "tokenizer": "keyword",
+  "text": "Los Angeles"
+}
+
+
+POST _analyze
+{
+  "tokenizer": "pattern",
+  "text": "The foo_bar_size’s default is 5."
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer_name": {
+          "tokenizer": "my_tokenizer_name"
+        }
+      },
+      "tokenizer": {
+        "my_tokenizer_name": {
+          "type": "pattern",
+          "pattern": ","
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "my_analyzer_name",
+  "text": "comma, separated, values"
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer_name": {
+          "tokenizer": "my_tokenizer_name"
+        }
+      },
+      "tokenizer": {
+        "my_tokenizer_name": {
+          "type": "simple_pattern",
+          "pattern": "[0123456789]{3}"
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "my_analyzer_name",
+  "text": "asta-313-267-847-mm-309"
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer_name": {
+          "tokenizer": "keyword",
+          "char_filter": [
+            "my_char_filter_name"
+          ]
+        }
+      },
+      "char_filter": {
+        "my_char_filter_name": {
+          "type": "html_strip",
+          "escaped_tags": [
+            "b"
+          ]
+        }
+      }
+    }
+  }
+
+
+
+POST _analyze
+{
+  "tokenizer": "keyword",
+  "char_filter": [
+    "html_strip"
+  ],
+  "text": "<p>I&apos;m so <b>happy</b>!</p>"
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer_name": {
+          "tokenizer": "keyword",
+          "char_filter": [
+            "my_char_filter_name"
+          ]
+        }
+      },
+      "char_filter": {
+        "my_char_filter_name": {
+          "type": "mapping",
+          "mappings": [
+            "٠ => 0",
+            "١ => 1",
+            "٢ => 2",
+            "٣ => 3",
+            "٤ => 4",
+            "٥ => 5",
+            "٦ => 6",
+            "٧ => 7",
+            "٨ => 8",
+            "٩ => 9"
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "my_analyzer_name",
+  "text": "My license plate is ٢٥٠١٥"
+}
+
+
+PUT my_index_name
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_custom_analyzer_name": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": {
+            "my_char_filter": {
+              "type": "pattern_replace",
+              "pattern": """(\d+)-(?=\d)""",
+              "replacement": "$1_"
+            },
+            "filter": [
+              "lowercase",
+              "asciifolding"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+
+
+POST my_index_name/_analyze
+{
+  "analyzer": "my_custom_analyzer_name",
+  "text": "My phone number is 102-456-789"
+}
+
+
+PUT mappingtest
+{
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text"
+      },
+      "age": {
+        "type": "integer"
+      },
+      "city": {
+        "type": "text"
+      }
+    }
+  }
+}

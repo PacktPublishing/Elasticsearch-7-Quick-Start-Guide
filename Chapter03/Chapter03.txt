@@ -1,0 +1,155 @@
+
+GET kibana_sample_data_flights/_search?pretty
+
+
+GET kibana_sample_data_flights/_search?format=yaml
+
+
+GET kibana_sample_data_flights/_search?human=true
+
+
+GET kibana_sample_data_flights/_search?filter_path=hits.hits._source.FlightNum, hits.hits._source.Carrier
+
+
+GET kibana_sample_data_flights/_settings?flat_settings=true
+
+
+GET _cluster/health
+
+
+GET _cluster/state
+
+
+GET _cluster/state/{metrics}/{indices}
+
+
+GET _cluster/stats
+
+
+GET /_cluster/stats/nodes/node_name_1,master:false
+
+
+POST /_cluster/reroute
+{
+  "commands": [
+    {
+      "move": {
+        "index": "reroute_me",
+        "shard": 0,
+        "from_node": "node1",
+        "to_node": "node2"
+      }
+    },
+    {
+      "allocate_replica": {
+        "index": "reroute_me",
+        "shard": 1,
+        "node": "node3"
+      }
+    }
+  ]
+}
+
+
+GET /_cluster/settings
+
+
+GET /_nodes
+
+
+GET /_nodes/_all
+
+
+GET _nodes/os
+
+
+GET _nodes/process
+
+
+GET /_nodes/plugins
+
+
+PUT index_name
+{
+  "settings": {
+    "number_of_shards": 4,
+    "number_of_replicas": 1
+  }
+}
+
+
+PUT index_name
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "field_number_1": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}
+
+
+GET /index_name
+
+
+DELETE /index_name
+
+
+DELETE /index_name1, index_name2, index_name3
+
+
+PUT test_index/_doc/1  
+{
+  "user": "user_name",
+  "Post_date": "2001-01-01T10-10-10"
+}
+
+
+PUT _cluster/settings
+{
+  "persistent": {
+    "action.auto_create_index": "true"
+  }
+}
+
+
+GET test_index/_doc/1  
+
+
+DELETE test_index/_doc/1  
+
+
+POST index_name/_delete_by_query  
+{
+  "query": {
+    "match": {}
+  }
+}
+
+
+POST test_index/_doc/1/_update  
+{
+  "doc": {
+    "user": "anurag"
+  }
+}
+
+
+GET /test_index/_doc/_mget
+{
+  "ids": [
+    "1",
+    "2"
+  ]
+}
+
+
+POST node_name/_update_by_query
+
+*************************************************************************************************************************

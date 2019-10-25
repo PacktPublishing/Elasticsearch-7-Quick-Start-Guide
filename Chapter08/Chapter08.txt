@@ -1,0 +1,93 @@
+PUT /logs-2019-04-30
+{
+  "aliases": {
+    "april_2019": {},
+    "year_2019": {}
+  },
+  "settings": {
+    "number_of_shards": 4,
+    "number_of_replicas": 0
+  }
+}
+
+GET logs-2019-04-30/_search?scroll=30s
+{
+  "size": 1000,
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "_doc": {
+        "order": "asc"
+      }
+    }
+  ]
+}
+
+
+GET _search/scroll
+{
+"scroll": "30s",
+"scroll_id": "DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAWOFnlWQVR3N3pxUjdLMn-JLcUZpSDVkWWcAAAAAAAAFjAAAAWPFnlWQVR3N3pxUjdLMnJLcUZpSDVkWWcAAAAAAAAFkRZ5VkFUdzd6cVI3SzJyS3FGaUg1ZFln"
+}
+
+
+DELETE _search/scroll/DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAWOFnlWQVR3N3pxUjdLMn-JLcUZpSDVkWWcAAAAAAAAFjAAAAWPFnlWQVR3N3pxUjdLMnJLcUZpSDVkWWcAAAAAAAAFkRZ5VkFUdzd6cVI3SzJyS3FGaUg1ZFln
+
+
+PUT _snapshot/my_repo
+{
+  "type": "fs",
+  "settings": {
+    "location": "/mnt/my_repo_folder"
+  }
+}
+
+PUT _snapshot/my_repo/my_snapshot_1
+
+
+PUT _snapshot/my_repo/my_logs_snapshot_1
+{
+  "indices": "logs-*",
+  "ignore_unavailable": true,
+  "include_global_state": true
+}
+
+
+GET _snapshot/my_repo/my_snapshot_2/_status
+
+
+GET _snapshot/my_repo/_all
+
+
+GET _snapshot/my_repo/my_snapshot_1
+
+
+DELETE _snapshot/my_repo/my_snapshot_1
+
+
+POST _snapshot/my_repo/my_snapshot_2/_restore
+
+POST _snapshot/my_repo/my_snapshot_2/_restore
+{
+  "indices": "logs-*",
+  "ignore_unavailable": true,
+  "include_global_state": false
+}
+
+
+POST _snapshot/my_repo/my_snapshot_2/_restore
+{
+  "indices": "logs-*",
+  "ignore_unavailable": true,
+  "include_global_state": false,
+  "rename_pattern": "logs-(.+)",
+  "rename_replacement": "restored-logs-$1"
+}
+
+
+POST _snapshot/my_repo/snap1
+
+
+POST _snapshot/my_repo/snap1/_restore
