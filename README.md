@@ -1,4 +1,4 @@
-# Elasticsearch-7-Quick-Start-Guide
+# Elasticsearch 7 Quick Start Guide
 
 <a href="https://www.packtpub.com/data/elasticsearch-7-quick-start-guide?utm_source=github&utm_medium=repository&utm_campaign=9781789803327"><img src="https://www.packtpub.com/media/catalog/product/cache/e4d64343b1bc593f1c5348fe05efa4a6/9/7/9781789803327-original.jpeg" alt="Elasticsearch 7 Quick Start Guide" height="256px" align="right"></a>
 
@@ -58,9 +58,9 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 
 
 ### Related products <Other books you may enjoy>
-* Hands-On Machine Learning for Cybersecurity [[Packt]](https://www.packtpub.com/in/data/mastering-elasticsearch-7-0?utm_source=github&utm_medium=repository&utm_campaign=9781789957754) [[Amazon]](https://www.amazon.com/dp/1789957753)
+* Advanced Elasticsearch 7.0 [[Packt]](https://www.packtpub.com/in/data/mastering-elasticsearch-7-0?utm_source=github&utm_medium=repository&utm_campaign=9781789957754) [[Amazon]](https://www.amazon.com/dp/1789957753)
 
-* Hands-On Cybersecurity with Blockchain [[Packt]](https://www.packtpub.com/in/big-data-and-business-intelligence/elasticsearch-70-cookbook-fourth-edition?utm_source=github&utm_medium=repository&utm_campaign=9781789956504) [[Amazon]](https://www.amazon.com/dp/B07QMQTT5F)
+* Elasticsearch 7.0 Cookbook - Fourth Edition [[Packt]](https://www.packtpub.com/in/big-data-and-business-intelligence/elasticsearch-70-cookbook-fourth-edition?utm_source=github&utm_medium=repository&utm_campaign=9781789956504) [[Amazon]](https://www.amazon.com/dp/B07QMQTT5F)
 
 ## Get to Know the Authors
 **Anurag Srivastava**
